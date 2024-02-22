@@ -47,12 +47,6 @@ public class TestCollections {
         }
     }
     @Test
-    void companyGetAllTest(){
-        assertArrayEquals(new String[]{"LG", "Haier", "Sharp", "Samsung", "Bosch", "Siemens", "Hitachi"}, RandomGenerator.getAll());
-        System.out.println("Получение массива фирм работает корректно\n");
-    }
-
-    @Test
     public void testFound1(){
         Main m = new Main();
         try {
@@ -130,25 +124,25 @@ public class TestCollections {
             throw new RuntimeException(e);
         }
     }
-  private HashMap<String, Integer> countFr(Main m){//для холодильников
+  private HashMap<String, Integer> countArr(Main m){//для холодильников
         HashMap<String, Integer> hashMap = new HashMap<>();
-        for (String st: RandomGenerator.getAll()){
+        for (Company comp: Company.values()){
             Integer num = 0;
-            for (Fridge app: m.getFridge())
-                if (app.getName().equals(st))
+            for (Appliances app: m.getArr())
+                if (app.getName().equals(comp.getName()))
                     ++num;
-            hashMap.put(st, num);
+            hashMap.put(comp.getName(), num);
         }
         return hashMap;
     }
-    private HashMap<String, Integer> countTV(Main m){//для телевизоров
+    private HashMap<String, Integer> countList(Main m){//для телевизоров
         HashMap<String, Integer> hashMap = new HashMap<>();
-        for (String st: RandomGenerator.getAll()){
+        for (Company comp: Company.values()){
             Integer num = 0;
-            for (TV app: m.getTV())
-                if (app.getName().equals(st))
+            for (Appliances app: m.getList())
+                if (app.getName().equals(comp.getName()))
                     ++num;
-            hashMap.put(st, num);
+            hashMap.put(comp.getName(), num);
         }
         return hashMap;
     }
@@ -175,6 +169,13 @@ public class TestCollections {
     }
 
     @Test
+    public void listChoiceTest(){
+        provideInput("1");
+        assertEquals(1, Menu.listChoose());
+        System.out.println("Выбор ArrayList поддерживается");
+    }
+
+    @Test
     public void charInputTest(){
         provideInput("22");
         assertEquals(22, Menu.charInput("Введите число:\n"));
@@ -187,31 +188,31 @@ public class TestCollections {
         System.out.println("Заданные значения!\n");
         Main m = new Main();
         try {
-            ArrayList<TV> arrayListTV = new ArrayList<>();
-            arrayListTV.add(new TV("Sharp", RandomGenerator.getRandomScreen()));
-            arrayListTV.add(new TV("LG", RandomGenerator.getRandomScreen()));
-            arrayListTV.add(new TV("Sharp", RandomGenerator.getRandomScreen()));
-            arrayListTV.add(new TV("Siemens", RandomGenerator.getRandomScreen()));
-            arrayListTV.add(new TV("Bosch", RandomGenerator.getRandomScreen()));
-            arrayListTV.add(new TV("Bosch", RandomGenerator.getRandomScreen()));
-            arrayListTV.add(new TV("Sharp", RandomGenerator.getRandomScreen()));
-            arrayListTV.add(new TV("Haier", RandomGenerator.getRandomScreen()));
-            arrayListTV.add(new TV("Hitachi", RandomGenerator.getRandomScreen()));
-            arrayListTV.add(new TV("Haier", RandomGenerator.getRandomScreen()));
-            m.setTV(arrayListTV);
+            ArrayList<Appliances> arrayList = new ArrayList<>();
+            arrayList.add(new TV("Sharp", RandomGenerator.getRandomScreen()));
+            arrayList.add(new Fridge("LG", RandomGenerator.getRandomShelf()));
+            arrayList.add(new TV("Sharp", RandomGenerator.getRandomScreen()));
+            arrayList.add(new TV("Siemens", RandomGenerator.getRandomScreen()));
+            arrayList.add(new Fridge("Haier", RandomGenerator.getRandomShelf()));
+            arrayList.add(new TV("Bosch", RandomGenerator.getRandomScreen()));
+            arrayList.add(new Fridge("LG", RandomGenerator.getRandomShelf()));
+            arrayList.add(new TV("Haier", RandomGenerator.getRandomScreen()));
+            arrayList.add(new Fridge("LG", RandomGenerator.getRandomShelf()));
+            arrayList.add(new Fridge("Bosch", RandomGenerator.getRandomShelf()));
+            m.setArr(arrayList);
 
-            LinkedList<Fridge> linkedListFridge = new LinkedList<>();
-            linkedListFridge.add(new Fridge("LG", RandomGenerator.getRandomShelf()));
-            linkedListFridge.add(new Fridge("Siemens", RandomGenerator.getRandomShelf()));
-            linkedListFridge.add(new Fridge("Siemens", RandomGenerator.getRandomShelf()));
-            linkedListFridge.add(new Fridge("LG", RandomGenerator.getRandomShelf()));
-            linkedListFridge.add(new Fridge("Haier", RandomGenerator.getRandomShelf()));
-            linkedListFridge.add(new Fridge("Sharp", RandomGenerator.getRandomShelf()));
-            linkedListFridge.add(new Fridge("LG", RandomGenerator.getRandomShelf()));
-            linkedListFridge.add(new Fridge("Bosch", RandomGenerator.getRandomShelf()));
-            linkedListFridge.add(new Fridge("LG", RandomGenerator.getRandomShelf()));
-            linkedListFridge.add(new Fridge("Bosch", RandomGenerator.getRandomShelf()));
-            m.setFridge(linkedListFridge);
+            LinkedList<Appliances> linkedList = new LinkedList<>();
+            linkedList.add(new TV("LG", RandomGenerator.getRandomScreen()));
+            linkedList.add(new Fridge("Siemens", RandomGenerator.getRandomShelf()));
+            linkedList.add(new Fridge("Siemens", RandomGenerator.getRandomShelf()));
+            linkedList.add(new Fridge("LG", RandomGenerator.getRandomShelf()));
+            linkedList.add(new TV("Bosch", RandomGenerator.getRandomScreen()));
+            linkedList.add(new Fridge("Sharp", RandomGenerator.getRandomShelf()));
+            linkedList.add(new TV("Sharp", RandomGenerator.getRandomScreen()));
+            linkedList.add(new Fridge("Bosch", RandomGenerator.getRandomShelf()));
+            linkedList.add(new TV("Hitachi", RandomGenerator.getRandomScreen()));
+            linkedList.add(new TV("Haier", RandomGenerator.getRandomScreen()));
+            m.setList(linkedList);
 
             Method method = Main.class.getDeclaredMethod("printList");
             method.setAccessible(true);
@@ -222,39 +223,39 @@ public class TestCollections {
 
             int[] n = (int[]) method.invoke(m, "Haier");
             assertEquals(2, n[0]);
-            System.out.printf("Количество телевизоров компании Haier равно %d\n", n[0]);
+            System.out.printf("Количество товаров компании Haier в ArrayList равно %d\n", n[0]);
             assertEquals(1, n[1]);
-            System.out.printf("Количество холодильников компании Haier равно %d\n", n[1]);
+            System.out.printf("Количество товаров компании Haier в LinkedList равно %d\n", n[1]);
             n = (int[]) method.invoke(m, "LG");
-            assertEquals(1, n[0]);
-            System.out.printf("Количество телевизоров компании LG равно %d\n", n[0]);
-            assertEquals(4, n[1]);
-            System.out.printf("Количество холодильников компани LG равно %d\n", n[1]);
-            n = (int[]) method.invoke(m, "Sharp");
             assertEquals(3, n[0]);
-            System.out.printf("Количество телевизоров компании Sharp равно %d\n", n[0]);
-            assertEquals(1, n[1]);
-            System.out.printf("Количество холодильников компани Sharp равно %d\n", n[1]);
+            System.out.printf("Количество товаров компании LG в ArrayList равно %d\n", n[0]);
+            assertEquals(2, n[1]);
+            System.out.printf("Количество товаров компании LG в LinkedList равно %d\n", n[1]);
+            n = (int[]) method.invoke(m, "Sharp");
+            assertEquals(2, n[0]);
+            System.out.printf("Количество товаров компании Sharp в ArrayList равно %d\n", n[0]);
+            assertEquals(2, n[1]);
+            System.out.printf("Количество товаров компании Sharp в LinkedList равно %d\n", n[1]);
             n = (int[]) method.invoke(m, "Samsung");
             assertEquals(0, n[0]);
-            System.out.printf("Количество телевизоров компании Samsung равно %d\n", n[0]);
+            System.out.printf("Количество товаров компании Samsung в ArrayList равно %d\n", n[0]);
             assertEquals(0, n[1]);
-            System.out.printf("Количество холодильников компани Samsung равно %d\n", n[1]);
+            System.out.printf("Количество товаров компании Samsung в LinkedList равно %d\n", n[1]);
             n = (int[]) method.invoke(m, "Siemens");
             assertEquals(1, n[0]);
-            System.out.printf("Количество телевизоров компании Siemens равно %d\n", n[0]);
+            System.out.printf("Количество товаров компании Siemens в ArrayList равно %d\n", n[0]);
             assertEquals(2, n[1]);
-            System.out.printf("Количество холодильников компани Siemens равно %d\n", n[1]);
+            System.out.printf("Количество товаров компании Siemens в LinkedList равно %d\n", n[1]);
             n = (int[]) method.invoke(m, "Bosch");
             assertEquals(2, n[0]);
-            System.out.printf("Количество телевизоров компании Bosch равно %d\n", n[0]);
+            System.out.printf("Количество товаров компании Bosch в ArrayList равно %d\n", n[0]);
             assertEquals(2, n[1]);
-            System.out.printf("Количество холодильников компани Bosch равно %d\n", n[1]);
+            System.out.printf("Количество товаров компании Bosch в LinkedList равно %d\n", n[1]);
             n = (int[]) method.invoke(m, "Hitachi");
-            assertEquals(1, n[0]);
-            System.out.printf("Количество телевизоров компании Hitachi равно %d\n", n[0]);
-            assertEquals(0, n[1]);
-            System.out.printf("Количество холодильников компани Hitachi равно %d\n\n", n[1]);
+            assertEquals(0, n[0]);
+            System.out.printf("Количество товаров компании Hitachi в ArrayList равно %d\n", n[0]);
+            assertEquals(1, n[1]);
+            System.out.printf("Количество товаров компании Hitachi в LinkedList равно %d\n\n", n[1]);
         } catch (NoSuchMethodException e) {
             System.out.println("Нет такого метода! " + e);
         } catch (InvocationTargetException | IllegalAccessException e) {
@@ -271,16 +272,16 @@ public class TestCollections {
             method.setAccessible(true);
             method.invoke(m);
 
-            HashMap<String, Integer> numFridge= countFr(m);
-            HashMap<String, Integer> numTV= countTV(m);
+            HashMap<String, Integer> numArr= countArr(m);
+            HashMap<String, Integer> numList= countList(m);
             method = Main.class.getDeclaredMethod("count", String.class);
             method.setAccessible(true);
-            for (String st: RandomGenerator.getAll()){
-                int[] n = (int[]) method.invoke(m, st);
-                assertEquals(numTV.get(st), n[0]);
-                assertEquals(numFridge.get(st), n[1]);
-                System.out.printf("Количество телевизоров компании %s равно %d\n", st, n[0]);
-                System.out.printf("Количество холодильников компании %s равно %d\n", st, n[1]);
+            for (Company comp: Company.values()){
+                int[] n = (int[]) method.invoke(m, comp.getName());
+                assertEquals(numArr.get(comp.getName()), n[0]);
+                assertEquals(numList.get(comp.getName()), n[1]);
+                System.out.printf("Количество телевизоров компании %s равно %d\n", comp.getName(), n[0]);
+                System.out.printf("Количество холодильников компании %s равно %d\n", comp.getName(), n[1]);
             }
             System.out.println();
         } catch (NoSuchMethodException e) {
@@ -289,6 +290,4 @@ public class TestCollections {
             throw new RuntimeException(e);
         }
     }
-
-
 }

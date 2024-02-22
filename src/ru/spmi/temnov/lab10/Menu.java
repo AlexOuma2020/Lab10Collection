@@ -3,6 +3,7 @@ package ru.spmi.temnov.lab10;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.StringJoiner;
 
 public class Menu {//класс меню
     Main m;
@@ -39,6 +40,19 @@ public class Menu {//класс меню
 
         return a;
     }
+
+    public static int listChoose(){//неизвестно как сделать тест. выбор товара для поиска/удалления
+        int menuOption = -1;
+
+        do{
+            System.out.println("В каком списке искать? 1 - ArrayList, 2 - LinkedList");
+            menuOption = inputOption();
+            if (menuOption != 1 && menuOption != 2)
+                System.out.println("Неверный ввод!");
+        }while(menuOption != 1 && menuOption != 2);
+
+        return menuOption;
+    }
     public static int appChoose(){//неизвестно как сделать тест. выбор товара для поиска/удалления
         int menuOption = -1;
 
@@ -64,13 +78,14 @@ public class Menu {//класс меню
         return feature;
     }
     private void selectFrom(){//поиск и списках
+        boolean list = (listChoose() == 1) ? true : false;
         switch (appChoose()){
 
             case 1 -> {
                 String needed = m.menu("Введите название фирмы холодильника: ");
                 int feature = charInput("Введите число полок холодильника: ");
                 Fridge fr = new Fridge(needed, feature);
-                int found = m.selectFridge(fr, false);
+                int found = m.selectFridge(fr, list,false);
                 if (found > -1)
                     System.out.printf("Найден холодильник фирмы %s с числом полок %d на позиции %d\n", needed, feature, found);
                 else
@@ -81,7 +96,7 @@ public class Menu {//класс меню
                 String needed = m.menu("Введите название фирмы телевизора: ");
                 int feature = charInput("Введите диагональ телевизора: ");
                 TV tv = new TV(needed, feature);
-                int found = m.selectTV(tv, false);
+                int found = m.selectTV(tv, list,false);
                 if (found > -1)
                     System.out.printf("Найден телевизор фирмы %s с диагональю %d на позиции %d\n", needed, feature, found);
                 else
@@ -92,13 +107,14 @@ public class Menu {//класс меню
 
     }
     private void deleteFrom(){//удаления из списка
+        boolean list = (listChoose() == 1) ? true : false;
         switch (appChoose()){
 
             case 1 -> {
                 String needed = m.menu("Введите название фирмы холодильника: ");
                 int feature = charInput("Введите число полок холодильника: ");
                 Fridge fr = new Fridge(needed, feature);
-                int found = m.selectFridge(fr, true);
+                int found = m.selectFridge(fr, list, true);
                 if (found > -1)
                     System.out.printf("Удален холодильник фирмы %s с числом полок %d на позиции %d\n", needed, feature, found);
 
@@ -110,7 +126,7 @@ public class Menu {//класс меню
                 String needed = m.menu("Введите название фирмы телевизора: ");
                 int feature = charInput("Введите диагональ телевизора: ");
                 TV tv = new TV(needed, feature);
-                int found = m.selectTV(tv, true);
+                int found = m.selectTV(tv, list, true);
                 if (found > -1)
                     System.out.printf("Найден телевизор фирмы %s с диагональю %d на позиции %d\n", needed, feature, found);
                 else
@@ -121,10 +137,16 @@ public class Menu {//класс меню
 
     }
     private void count(){//опция меню расчета количества товаров
-        String needed = m.menu("Введите название фирмы, количество товаров которой хотите узнать {LG, Haier, Sharp, Samsung, Bosch, Siemens, Hitachi}: ");
+        String optionMenu = "Введите название фирмы, количество товаров которой хотите узнать {";
+        StringJoiner sj = new StringJoiner(", ");
+        for (Company comp: Company.values()){
+            sj.add(comp.getName());
+        }
+        optionMenu += sj + "} :";
+        String needed = m.menu(optionMenu);
         int[] nums = m.count(needed);
-        System.out.printf("Телевизоров заданной фирмы = %d\n", nums[0]);
-        System.out.printf("Холодильников заданной фирмы = %d\n", nums[1]);
+        System.out.printf("Товаров заданной фирмы в arrayList = %d\n", nums[0]);
+        System.out.printf("Товаров заданной фирмы в LinkedList = %d\n", nums[1]);
         }
     private void menuController(){//контроллер меню
         int menuOption = -1;

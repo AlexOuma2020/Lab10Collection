@@ -9,35 +9,38 @@ import java.util.LinkedList;
 import java.util.List;
 
 public class Main{//основной класс
-    private List<TV> tv = new ArrayList<>();//массивный список телевизоров
-    private List<Fridge> fridge = new LinkedList<>();//связный список телевизоров
+    private List<Appliances> arrayList = new ArrayList<>();//массивный список
+    private List<Appliances> list = new LinkedList<>();//связный список
     Main(){
-        for (int i = 0; i < 100; ++i) {
-            tv.add(new TV(RandomGenerator.getRandomComp(), RandomGenerator.getRandomScreen()));
-            fridge.add(new Fridge(RandomGenerator.getRandomComp(), RandomGenerator.getRandomShelf()));
+        for (int i = 0; i < 50; ++i) {
+            arrayList.add(new TV(RandomGenerator.getRandomComp(), RandomGenerator.getRandomScreen()));
+            arrayList.add(new Fridge(RandomGenerator.getRandomComp(), RandomGenerator.getRandomShelf()));
+            list.add(new Fridge(RandomGenerator.getRandomComp(), RandomGenerator.getRandomShelf()));
+            list.add(new TV(RandomGenerator.getRandomComp(), RandomGenerator.getRandomScreen()));
+
         }
     }
-    public void setTV(ArrayList<TV> arr){
-        tv = arr;
+    public void setArr(ArrayList<Appliances> arr){
+        arrayList = arr;
     }
 
-    public void setFridge(LinkedList<Fridge> arr){
-        fridge = arr;
+    public void setList(LinkedList<Appliances> arr){
+        list = arr;
     }
     public void printList(){
-        Iterator<TV> titer = tv.iterator();
-        Iterator<Fridge> fiter = fridge.iterator();
-        System.out.println("\n\nСписок холодильников: ");
-        while(titer.hasNext())
-            titer.next().show();
-        System.out.println("\n\n\n\nСписок холодильников: ");
-        while(fiter.hasNext())
-            fiter.next().show();
+        Iterator<Appliances> arrIter = arrayList.iterator();
+        Iterator<Appliances> lIter = list.iterator();
+        System.out.println("\n\nArrayList: ");
+        while(arrIter.hasNext())
+            System.out.println(arrIter.next());
+        System.out.println("\n\n\nLinkedList: ");
+        while(lIter.hasNext())
+            System.out.println(lIter.next());
         System.out.println();
     }
     private static boolean find(String inp){
-        for (String comp: RandomGenerator.getAll()){
-            if (comp.equals(inp))
+        for (Company comp: Company.values()){
+            if (comp.getName().equals(inp))
                 return true;
         }
         return false;
@@ -65,47 +68,65 @@ public class Main{//основной класс
         } while (!excep);
         return needed;
     }
-    public int selectFridge(Fridge fr, boolean removed){//выбор телевизора для удаления или поиска
-        Iterator<Fridge> fiter = fridge.iterator();
+    public int selectFridge(Fridge fr, boolean lst, boolean removed){//выбор телевизора для удаления или поиска
+        Iterator<Appliances> iter;
+        if(lst)
+             iter = arrayList.iterator();
+        else
+            iter = list.iterator();
         int ind = -1, i = -1;
-        while(fiter.hasNext()){
+        while(iter.hasNext()){
             i++;
-            Fridge current =  fiter.next();
-            if (current.getName().equals(fr.getName()) && current.getShelf_num() == fr.getShelf_num()){
-                ind = i;
-                if(removed)
-                    fiter.remove();
-                break;
+            Appliances current =  iter.next();
+            if (current instanceof Fridge)
+            {
+                Fridge curr = (Fridge) current;
+                if (curr.getName().equals(fr.getName()) && curr.getShelf_num() == fr.getShelf_num()){
+                    ind = i;
+                    if(removed)
+                        iter.remove();
+                    break;
+                }
             }
+
         }
         return ind;
     }
 
-    public int selectTV(TV tvs, boolean removed){//выбор телевизора для удаления или поиска
-        Iterator<TV> titer = tv.iterator();
+    public int selectTV(TV tv, boolean lst, boolean removed){//выбор телевизора для удаления или поиска
+        Iterator<Appliances> iter;
+        if(lst)
+            iter = arrayList.iterator();
+        else
+            iter = list.iterator();
         int ind = -1, i = -1;
-        while(titer.hasNext()){
+        while(iter.hasNext()){
             i++;
-            TV current =  titer.next();
-            if (current.getName().equals(tvs.getName()) && current.getScreen() == tvs.getScreen()){
-                ind = i;
-                if(removed)
-                    titer.remove();
-                break;
+            Appliances current =  iter.next();
+            if (current instanceof TV)
+            {
+                TV curr = (TV) current;
+                if (curr.getName().equals(tv.getName()) && curr.getScreen() == tv.getScreen()){
+                    ind = i;
+                    if(removed)
+                        iter.remove();
+                    break;
+                }
             }
+
         }
         return ind;
     }
     public int[] count(String needed){//метод расчета ВП
         int[] nums = new int[2];
         long startTimeT = System.nanoTime();
-        for (TV app: tv){
+        for (Appliances app: arrayList){
             if (app.getName().equals(needed))
                 ++nums[0];
         }
         long endTimeT = System.nanoTime();
         long startTimeF = System.nanoTime();
-        for (Fridge app: fridge){
+        for (Appliances app: list){
             if (app.getName().equals(needed))
                 ++nums[1];
         }
@@ -113,18 +134,17 @@ public class Main{//основной класс
         long dur1 = endTimeT - startTimeT;
         long dur2 = endTimeF - startTimeF;
         System.out.printf("Время на выполнение задания: ArrayList = %d ... LinkedList = %d\n", dur1, dur2);
-        System.out.printf("Телевизоров = %d ... Холодильников = %d\n", tv.size(), fridge.size());
+        System.out.printf("Длина ArrayList = %d ... длина LinkedList = %d\n", arrayList.size(), list.size());
         return nums;
     }
-    public List<TV>  getTV(){
-        return tv;
+    public List<Appliances> getArr(){
+        return arrayList;
     }
-    public List<Fridge>  getFridge(){
-        return fridge;
+    public List<Appliances> getList(){
+        return list;
     }
 
     public static void main(String[] args) {
-        Menu m = new Menu();
-
+        new Menu();
     }
 }

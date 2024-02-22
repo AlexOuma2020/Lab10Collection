@@ -5,7 +5,6 @@ abstract class Appliances{//суперкласс-товар
     Appliances(String name){
         this.name = name;
     }
-    public abstract void show();
     public String getName(){
         return name;
     }

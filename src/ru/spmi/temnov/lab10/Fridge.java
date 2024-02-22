@@ -8,8 +8,8 @@ final class Fridge extends Appliances{//наследник холодильни�
     }
 
     @Override
-    public void show() {//переопределение метода вывода информации
-        System.out.printf("Холодильник компании %s с %d полками внутри\n", name, shelf_num);
+    public String toString() {
+        return "Холодильник фирмы " + name + ". Число полок = " + shelf_num + '\n';
     }
 
     public int getShelf_num() {

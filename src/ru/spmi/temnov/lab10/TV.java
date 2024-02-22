@@ -8,8 +8,8 @@ final class TV extends Appliances{//наследник телевизор
     }
 
     @Override
-    public void show(){//переопределение метода вывода информации
-        System.out.printf("Телевиор компании %s с диагональю %d''\n", name, screen);
+    public String toString() {
+        return "Телевизор фирмы " + name + " с диагональю = " + screen + '\n';
     }
 
     public int getScreen(){
